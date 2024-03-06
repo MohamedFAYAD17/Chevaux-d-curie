@@ -1,0 +1,154 @@
+mysql> show databases ;
++---------------------+
+| Database            |
++---------------------+
+| bd_vol              |
+| bdtest              |
+| centre_de_formation |
+| centreformation     |
+| chevauxdecurie      |
+| djallabasoft        |
+| hollywood           |
+| information_schema  |
+| mohamedf            |
+| mydb                |
+| mysql               |
+| performance_schema  |
+| primarykey          |
+| sakila              |
+| storedb             |
+| sys                 |
+| test                |
+| tramway             |
+| txt                 |
+| world               |
++---------------------+
+20 rows in set (0.10 sec)
+
+mysql> use chevauxdecurie;
+Database changed
+mysql> show tables ;
++--------------------------+
+| Tables_in_chevauxdecurie |
++--------------------------+
+| cheval                   |
+| concours                 |
+| croissance               |
+| participation            |
+| personne                 |
+| proprietaire             |
+| race                     |
++--------------------------+
+7 rows in set (0.01 sec)
+
+mysql> select * from cheval ;
++------------+------------+---------------+----------------+-----------------+-----------------+---------------+----------------------+
+| Num_cheval | Nom_cheval | Num_Tattouage | Couleur_cheval | Num_cheval_mere | Num_cheval_pere | Nom_race      | Num_personne_eleveur |
++------------+------------+---------------+----------------+-----------------+-----------------+---------------+----------------------+
+|          1 | Sprinter   | ABC123        | Noir           |            NULL |            NULL | Frison        |                    3 |
+|          2 | Luna       | DEF456        | Blanc          |            NULL |            NULL | Lipizzan      |                    3 |
+|          3 | Thunder    | GHI789        | Alezan         |            NULL |            NULL | Quarter Horse |                    3 |
++------------+------------+---------------+----------------+-----------------+-----------------+---------------+----------------------+
+3 rows in set (0.01 sec)
+
+mysql> select * from concours ;
++-------------------------+----------------+----------------------+
+| Nom_concours            | Annee_concours | Nombres_participants |
++-------------------------+----------------+----------------------+
+| Championnat Régional    |           2022 |                   15 |
+| Grand Prix de Marrakech |           2023 |                   20 |
+| Tournoi National        |           2024 |                   25 |
++-------------------------+----------------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from croissance ;
++---------------+---------+------------------+-------------------+------------+
+| Id_croissance | Mois    | Poids_croissance | Taille_croissance | Num_cheval |
++---------------+---------+------------------+-------------------+------------+
+|             1 | Janvier |              150 |               145 |          1 |
+|             2 | Février |              155 |               147 |          1 |
+|             3 | Janvier |              140 |               140 |          2 |
+|             4 | Février |              145 |               142 |          2 |
+|             5 | Janvier |              160 |               150 |          3 |
+|             6 | Février |              165 |               152 |          3 |
++---------------+---------+------------------+-------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from participation ;
++------------+-------------------------+----------------+----------------------+-------+
+| Num_cheval | Nom_concours            | Annee_concours | Nombres_participants | Place |
++------------+-------------------------+----------------+----------------------+-------+
+|          1 | Grand Prix de Marrakech |           2023 |                   20 |     5 |
+|          2 | Championnat Régional    |           2022 |                   15 |     3 |
+|          3 | Tournoi National        |           2024 |                   25 |    10 |
++------------+-------------------------+----------------+----------------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from personne ;
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+| Id_Personne | Nom_personne | Prenom_personne | Adresse_personne        | Telephone_personne | Fonction     | Id_personne_superieur |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+|           1 | Lalaoui      | Ahmed           | 10 route des riches     | 0123456789         | Directeur    |                  NULL |
+|           2 | BenMbarek    | Omar            | 8 Avenue de Safi        | 9876543210         | Secrétaire   |                     1 |
+|           3 | Zahir        | Bakr            | 5 Rue du Miserable      | 0234567890         | Éleveur      |                     1 |
+|           4 | Ahmadi       | Mounir          | 10 Chemin de la Rivière | 0456789123         | Propriétaire |                  NULL |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from proprietaire ;
++------------+-------------+------------+------------+
+| Num_cheval | Id_personne | prix_achat | date       |
++------------+-------------+------------+------------+
+|          1 |           4 |       5000 | 2022-01-15 |
+|          2 |           4 |       7000 | 2023-03-20 |
+|          3 |           4 |      10000 | 2023-06-10 |
++------------+-------------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from race ;
++---------------+-----------+------------+
+| Nom_Race      | PoidsType | TailleType |
++---------------+-----------+------------+
+| Frison        |       600 |        160 |
+| Lipizzan      |       500 |        155 |
+| Quarter Horse |       550 |        150 |
++---------------+-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql>
+mysql> select * from cheval where nom_race = 'Arabian';
+Empty set (0.00 sec)
+
+mysql> select poidstype, tailletype from race where nom_race ='Arabian';
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM chevauxdecurie.personne
+    -> WHERE fonction LIKE '%proprietaire%' ;
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+| Id_Personne | Nom_personne | Prenom_personne | Adresse_personne        | Telephone_personne | Fonction     | Id_personne_superieur |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+|           4 | Ahmadi       | Mounir          | 10 Chemin de la Rivière | 0456789123         | Propriétaire |                  NULL |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Personne WHERE Id_personne_superieur IS NULL;
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+| Id_Personne | Nom_personne | Prenom_personne | Adresse_personne        | Telephone_personne | Fonction     | Id_personne_superieur |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+|           1 | Lalaoui      | Ahmed           | 10 route des riches     | 0123456789         | Directeur    |                  NULL |
+|           4 | Ahmadi       | Mounir          | 10 Chemin de la Rivière | 0456789123         | Propriétaire |                  NULL |
++-------------+--------------+-----------------+-------------------------+--------------------+--------------+-----------------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Concours WHERE Annee_concours = 2019;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM Concours WHERE Annee_concours = 2022;
++----------------------+----------------+----------------------+
+| Nom_concours         | Annee_concours | Nombres_participants |
++----------------------+----------------+----------------------+
+| Championnat Régional |           2022 |                   15 |
++----------------------+----------------+----------------------+
+1 row in set (0.00 sec)
+
+mysql>
