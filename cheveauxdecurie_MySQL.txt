@@ -1,0 +1,234 @@
+C:\Users\hp>mysql --version
+mysql  Ver 8.0.19 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+C:\Users\hp>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++---------------------+
+| Database            |
++---------------------+
+| bd_vol              |
+| bdtest              |
+| centre_de_formation |
+| centreformation     |
+| djallabasoft        |
+| ecurie              |
+| hollywood           |
+| information_schema  |
+| mohamedf            |
+| mydb                |
+| mysql               |
+| performance_schema  |
+| primarykey          |
+| sakila              |
+| storedb             |
+| sys                 |
+| test                |
+| tramway             |
+| txt                 |
+| world               |
++---------------------+
+20 rows in set (0.14 sec)
+
+mysql> drop database ecurie ;
+Query OK, 3 rows affected (0.31 sec)
+
+mysql> create database chevauxdecurie;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use chevauxdecurie ;
+Database changed
+mysql> CREATE TABLE Personne (
+    ->     Id_Personne INT PRIMARY KEY,
+    ->     Nom_personne VARCHAR(50),
+    ->     Prenom_personne VARCHAR(50),
+    ->     Adresse_personne VARCHAR(100),
+    ->     Telephone_personne VARCHAR(20),
+    ->     Fonction VARCHAR(50),
+    ->     Id_personne_superieur INT,
+    ->     FOREIGN KEY (Id_personne_superieur) REFERENCES Personne(Id_Personne)
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql>
+mysql> CREATE TABLE Cheval (
+    ->     Num_cheval INT PRIMARY KEY,
+    ->     Nom_cheval VARCHAR(50),
+    ->     Num_Tattouage INT,
+    ->     Couleur_cheval VARCHAR(50),
+    ->     Num_cheval_mere INT,
+    ->     Num_cheval_pere INT,
+    ->     Nom_race VARCHAR(50),
+    ->     Num_personne_eleveur INT,
+    ->     FOREIGN KEY (Num_cheval_mere) REFERENCES Cheval(Num_cheval),
+    ->     FOREIGN KEY (Num_cheval_pere) REFERENCES Cheval(Num_cheval),
+    ->     FOREIGN KEY (Num_personne_eleveur) REFERENCES Personne(Id_Personne)
+    -> );
+Query OK, 0 rows affected (0.18 sec)
+
+mysql>
+mysql> CREATE TABLE Concours (
+    ->     Nom_concours VARCHAR(50),
+    ->     Annee_concours INT,
+    ->     Nombres_participants INT,
+    ->     PRIMARY KEY (Nom_concours, Annee_concours)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql>
+mysql> CREATE TABLE Race (
+    ->     Nom_Race VARCHAR(50) PRIMARY KEY,
+    ->     PoidsType FLOAT,
+    ->     TailleType FLOAT
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
+mysql> CREATE TABLE Croissance (
+    ->     Id_croissance INT PRIMARY KEY,
+    ->     Mois INT,
+    ->     Poids_croissance FLOAT,
+    ->     Taille_croissance FLOAT,
+    ->     Num_cheval INT,
+    ->     FOREIGN KEY (Num_cheval) REFERENCES Cheval(Num_cheval)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql>
+mysql> CREATE TABLE Proprietaire (
+    ->     Num_cheval INT,
+    ->     Id_personne INT,
+    ->     prix_achat FLOAT,
+    ->     date DATE,
+    ->     PRIMARY KEY (Num_cheval, Id_personne),
+    ->     FOREIGN KEY (Num_cheval) REFERENCES Cheval(Num_cheval),
+    ->     FOREIGN KEY (Id_personne) REFERENCES Personne(Id_Personne)
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql>
+mysql> CREATE TABLE Participation (
+    ->     Num_cheval INT,
+    ->     Nom_concours VARCHAR(50),
+    ->     Annee_concours INT,
+    ->     Nombres_participants INT,
+    ->     Place INT,
+    ->     PRIMARY KEY (Num_cheval, Nom_concours, Annee_concours),
+    ->     FOREIGN KEY (Num_cheval) REFERENCES Cheval(Num_cheval),
+    ->     FOREIGN KEY (Nom_concours, Annee_concours) REFERENCES Concours(Nom_concours, Annee_concours)
+    -> );
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> show tables;
++--------------------------+
+| Tables_in_chevauxdecurie |
++--------------------------+
+| cheval                   |
+| concours                 |
+| croissance               |
+| participation            |
+| personne                 |
+| proprietaire             |
+| race                     |
++--------------------------+
+7 rows in set (0.02 sec)
+
+mysql> desc cheval ;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| Num_cheval           | int         | NO   | PRI | NULL    |       |
+| Nom_cheval           | varchar(50) | YES  |     | NULL    |       |
+| Num_Tattouage        | int         | YES  |     | NULL    |       |
+| Couleur_cheval       | varchar(50) | YES  |     | NULL    |       |
+| Num_cheval_mere      | int         | YES  | MUL | NULL    |       |
+| Num_cheval_pere      | int         | YES  | MUL | NULL    |       |
+| Nom_race             | varchar(50) | YES  |     | NULL    |       |
+| Num_personne_eleveur | int         | YES  | MUL | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> desc concours;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| Nom_concours         | varchar(50) | NO   | PRI | NULL    |       |
+| Annee_concours       | int         | NO   | PRI | NULL    |       |
+| Nombres_participants | int         | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc croissance ;
++-------------------+-------+------+-----+---------+-------+
+| Field             | Type  | Null | Key | Default | Extra |
++-------------------+-------+------+-----+---------+-------+
+| Id_croissance     | int   | NO   | PRI | NULL    |       |
+| Mois              | int   | YES  |     | NULL    |       |
+| Poids_croissance  | float | YES  |     | NULL    |       |
+| Taille_croissance | float | YES  |     | NULL    |       |
+| Num_cheval        | int   | YES  | MUL | NULL    |       |
++-------------------+-------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc paticipation ;
+ERROR 1146 (42S02): Table 'chevauxdecurie.paticipation' doesn't exist
+mysql> desc participation ;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| Num_cheval           | int         | NO   | PRI | NULL    |       |
+| Nom_concours         | varchar(50) | NO   | PRI | NULL    |       |
+| Annee_concours       | int         | NO   | PRI | NULL    |       |
+| Nombres_participants | int         | YES  |     | NULL    |       |
+| Place                | int         | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc personne ;
++-----------------------+--------------+------+-----+---------+-------+
+| Field                 | Type         | Null | Key | Default | Extra |
++-----------------------+--------------+------+-----+---------+-------+
+| Id_Personne           | int          | NO   | PRI | NULL    |       |
+| Nom_personne          | varchar(50)  | YES  |     | NULL    |       |
+| Prenom_personne       | varchar(50)  | YES  |     | NULL    |       |
+| Adresse_personne      | varchar(100) | YES  |     | NULL    |       |
+| Telephone_personne    | varchar(20)  | YES  |     | NULL    |       |
+| Fonction              | varchar(50)  | YES  |     | NULL    |       |
+| Id_personne_superieur | int          | YES  | MUL | NULL    |       |
++-----------------------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc proprietaire ;
++-------------+-------+------+-----+---------+-------+
+| Field       | Type  | Null | Key | Default | Extra |
++-------------+-------+------+-----+---------+-------+
+| Num_cheval  | int   | NO   | PRI | NULL    |       |
+| Id_personne | int   | NO   | PRI | NULL    |       |
+| prix_achat  | float | YES  |     | NULL    |       |
+| date        | date  | YES  |     | NULL    |       |
++-------------+-------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc race ;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| Nom_Race   | varchar(50) | NO   | PRI | NULL    |       |
+| PoidsType  | float       | YES  |     | NULL    |       |
+| TailleType | float       | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql>
